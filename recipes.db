@@ -1,0 +1,8 @@
+CREATE TABLE recipes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL, -- 'veg' or 'non-veg'
+    description TEXT NOT NULL,
+    image TEXT NOT NULL, -- Path to image
+    allergens TEXT
+);

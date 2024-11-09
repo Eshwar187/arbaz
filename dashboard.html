@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flavourscapes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+
+        /* Header */
+        .header {
+            background-color: #4f4237;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* FAQ Bot and User Profile */
+        .faq-bot, .user-profile {
+            position: absolute;
+            top: 20px;
+            font-size: 16px;
+        }
+
+        .faq-bot {
+            left: 20px;
+            color: #ffd166;
+            cursor: pointer;
+        }
+
+        .user-profile {
+    position: absolute;       /* Positions it in the top right */
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;              /* Set width for better visibility */
+    height: 40px;             /* Set height for better visibility */
+    background-color: #463a30; /* Blue background for better contrast */
+    color: #fff;
+    border-radius: 50%;       /* Makes it a circular button */
+    text-decoration: none;    /* Removes underline if present */
+    cursor: pointer;
+    pointer-events: auto;     /* Ensures the link is clickable */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+}
+
+.user-profile:hover {
+    background-color: #463a30; /* Darker shade on hover */
+}
+
+
+        .user-profile img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        /* Dashboard Container */
+        .container {
+            margin: 20px;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-bar input[type="text"] {
+            width: 60%;
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .search-bar button {
+            padding: 12px 20px;
+            background-color: #4f4237;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .search-bar button:hover {
+            background-color: #4f4237;
+        }
+
+        /* Recipe Cards Grid */
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Recipe Card */
+        .recipe-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recipe-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .recipe-card .content {
+            padding: 20px;
+        }
+
+        .recipe-card h3 {
+            margin: 0 0 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .recipe-card p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Tags */
+        .tags {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+                /* Add Recipe Overlay */
+        .add-recipe-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 15px;
+        }
+
+        .recipe-card:hover .add-recipe-overlay {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Content Layout within Overlay */
+        .overlay-content {
+            display: flex;
+            width: 100%;
+            max-width: 500px;
+            gap: 15px;
+        }
+
+        .section-box {
+            width: 50%;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 200px;
+        }
+
+        .section-box h6 {
+            font-size: 16px;
+            color: #007bff;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .section-box p {
+            font-size: 12px;
+            color: #555;
+            margin: 4px 0;
+            text-align: left;
+        }
+
+        .add-recipe-overlay h4 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .veg {
+            background-color: #28a745;
+        }
+
+        .non-veg {
+            background-color: #dc3545;
+        }
+
+        .allergen {
+            background-color: #f4a261;
+        }
+
+        
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <a href="profile.html" class="user-profile">U</a>
+    <!-- Header Section -->
+    <div class="header">
+        <h1>FLAVORSCAPES</h1>
+        <p>-Just a colourful food palette-</p>
+
+        <!-- FAQ Bot Link -->
+        <div class="faq-bot" onclick="openFAQ()">
+            FAQ Bot
+        </div>
+
+        <!-- User Profile -->
+        <div class="user-profile">
+            <img src="data:image/png;base64,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" alt="User Profile">
+            <span>User</span>
+        </div>
+    </div>
+
+    <!-- Container Section -->
+    <div class="container">
+
+        <!-- Search Bar Section -->
+        <div class="search-bar">
+            <input type="text" placeholder="Search for recipes...">
+            <button type="submit">Search</button>
+        </div>
+
+        <!-- Recipe Grid Section -->
+        <div class="recipe-grid">
+
+            <!-- Sample Recipe Card (Veg) -->
+            <div class="recipe-card">
+                <img src="https://img.freepik.com/premium-photo/panner-tikka-masala-indian-cuisine_113255-207481.jpg?ga=GA1.1.1911128232.1729533487&semt=ais_hybrid" alt="Recipe Image">
+                <div class="content">
+                    <h3>Paneer Butter Masala</h3>
+                    <span class="tags veg">Vegetarian</span>
+                    <span class="tags allergen">Contains Dairy, Cashew</span>
+                    <p>Delicious North Indian dish made with paneer in a rich, creamy tomato sauce.</p>
+                </div>
+
+                <!-- Add Recipe Overlay with Ingredients and Recipe Steps -->
+                <div class="add-recipe-overlay">
+                    <h4>Paneer Butter Masala</h4>
+                    <div class="overlay-content">
+                        <!-- Ingredients Section -->
+                        <div class="section-box">
+                            <h6>INGREDIENTS</h6>
+                            <p>Paneer - 1 slice</p>
+                            <p>Salt - 2.5 Tsp</p>
+                            <p>Chilli Powder - 1.5 Tsp</p>
+                            <p>Cream - 10 ml</p>
+                            <p>Milk - 1 Cup</p>
+                            <p>Cashew - 5 gms</p>
+                            <p>Onion - 2 Bulbs</p>
+                            <p>Garlic - 2</p>
+                            <p>Ginger - 2 Shreds</p>
+                            <p>Coriander - Garnish</p>
+                        </div>
+                        
+                        <!-- Recipe Steps Section -->
+                        <div class="section-box">
+                            <h6>RECIPE</h6>
+                            <p>1. Boil water and cook veggies, then blend them.</p>
+                            <p>2. Gold fry the paneer.</p>
+                            <p>3. Add blended mixture to the paneer.</p>
+                            <p>4. Pour cream and milk, then simmer.</p>
+                            <p>5. Add cashew paste for creaminess.</p>
+                            <p>6. Let it cook for 15 minutes.</p>
+                            <p>7. Garnish with coriander leaves.</p>
+                            <p>8. Serve hot with naan or rice.</p>
+                            <p>9. Enjoy your dish!</p>
+                            <p>10. Adjust spices as needed.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Sample Recipe Card (Non-Veg) -->
+            <div class="recipe-card">
+                <img src="https://img.freepik.com/premium-photo/super-delicious-beef-biryani-image_1197144-2890.jpg?ga=GA1.1.1911128232.1729533487&semt=ais_hybrid" alt="Recipe Image">
+                <div class="content">
+                    <h3>Chicken Biryani</h3>
+                    <span class="tags non-veg">Non-Vegetarian</span>
+                    <span class="tags allergen">Contains Nuts, Ghee</span>
+                    <p>Aromatic and flavorful, this chicken biryani will make your taste buds dance!</p>
+                </div>
+                <!-- Add Recipe Overlay with Ingredients and Recipe Steps -->
+                <div class="add-recipe-overlay">
+                    <h4>Chicken Biriyani</h4>
+                    <div class="overlay-content">
+                        <!-- Ingredients Section -->
+                        <div class="section-box">
+                            <h6>INGREDIENTS</h6>
+                            <p>Basmati Rice - 1/2 Cup</p>
+                            <p>Chicken - 100 gms</p>
+                            <p>Onions - 1 Small</p>
+                            <p>Tomatoes - 1/2 Small</p>
+                            <p>Yogurt or Curd - 2 Spoons</p>
+                            <p>Ginger-Garlic paste - 1 Tsp</p>
+                            <p>Biriyani Masala - 1 Tsp</p>
+                            <p>Saffron - A pinch</p>
+                            <p>Mint and Coriander - Garnish</p>
+                            <p>Ghee  1 Tsp</p>
+                        </div>
+                        
+                        <!-- Recipe Steps Section -->
+                        <div class="section-box">
+                            <h6>RECIPE</h6>
+                            <p>1. Marinate chicken with yogurt, ginger-garlic paste, biryani masala, and salt. Let it sit for 30 minutes.</p>
+                            <p>2. Rinse and soak basmati rice for 30 minutes, then boil with salt and whole spices (cardamom, cloves, bay leaf) until 70% cooked and drain.</p>
+                            <p>3. Thinly slice onions and fry in hot oil until golden and crispy.</p> 
+                            <p>4. Soak saffron in warm milk.</p>
+                            <p>5. In a large pot, heat oil or ghee, add marinated chicken, and cook until tender and the masala thickens.</p>
+                            <p>6. In a heavy-bottomed pot, layer the cooked chicken at the bottom, then top with partially cooked rice.</p>
+                            <p>7. Sprinkle fried onions, chopped mint and coriander leaves, and drizzle saffron milk on top.</p>
+                            <p>8. Cover the pot with a tight-fitting lid or seal with dough. Cook on low heat for 20-25 minutes.</p>
+                            <p>9. Let the biryani rest for 10 minutes before opening.</p>
+                            <p>10.Gently fluff up the rice with a fork and serve hot with raita or a side salad.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                
+
+            <!-- Sample Recipe Card (Veg) -->
+            <div class="recipe-card">
+                <img src="https://img.freepik.com/free-photo/georgian-khinkali-glass-red-wine_140725-9550.jpg?ga=GA1.1.1911128232.1729533487&semt=ais_hybrid" alt="Recipe Image">
+                <div class="content">
+                    <h3>Steamy Momos</h3>
+                    <span class="tags veg">Vegetarian</span>
+                    <span class="tags allergen">Contains Mushroom, Soy</span>
+                    <p>Healthy stir fry made with fresh veggies and a tangy sauce.</p>
+                </div>
+                <!-- Add Recipe Overlay with Ingredients and Recipe Steps -->
+                <div class="add-recipe-overlay">
+                    <h4>Steamy Momos</h4>
+                    <div class="overlay-content">
+                        <!-- Ingredients Section -->
+                        <div class="section-box">
+                            <h6>INGREDIENTS</h6>
+                            <p>Flour (Maida) - 1 cup</p>
+                            <p>Mushroom - 50 grams</p>
+                            <p>Cabbage - 2 Tsp</p>
+                            <p>Carrot - 1 Tsp</p>
+                            <p>Onion - 1 Tsp</p>
+                            <p>Ginger-Garlic Paste - 1/2 Tsp</p>
+                            <p>Soy Sauce - 1/2 Tsp</p>
+                            <p>Salt - 1/2 Tsp</p>
+                            <p>Pepper - 1/4 Tsp</p>
+                            <p>Water - As needed for dough</p>
+
+                        </div>
+                        
+                        <!-- Recipe Steps Section -->
+                        <div class="section-box">
+                            <h6>RECIPE</h6>
+                            <p>1. Mix flour with a pinch of salt and water. Knead into a soft dough and set aside.</p>
+                            <p>2. Combine minced filling, cabbage, carrot, onion, ginger-garlic paste, soy sauce, salt, and pepper.</p>
+                            <p>3. Divide the dough into small balls. Roll each into thin circles.</p>
+                            <p>4. Place a spoonful of filling in the center of each circle. Fold and pleat the edges to seal.</p>
+                            <p>5. Grease the steamer tray lightly or line with cabbage leaves.</p>
+                            <p>6. Arrange momos on the tray, ensuring they don’t touch.</p>
+                            <p>7. Bring water to a boil in the steamer base.</p>
+                            <p>8. Place the tray inside, cover, and steam for 10-12 minutes.</p>
+                            <p>9. When the outer covering becomes glossy and slightly translucent, they are done.</p>
+                            <p>10.Carefully take out the momos using tongs and serve hot with a spicy dipping sauce or chutney.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <!-- Sample Recipe Card (Non-Veg) -->
+            <div class="recipe-card">
+                <img src="https://img.freepik.com/premium-photo/plate-shrimps-prawns_1197144-2824.jpg?ga=GA1.1.1911128232.1729533487&semt=ais_hybrid" alt="Recipe Image">
+                <div class="content">
+                    <h3>Grilled Prawns</h3>
+                    <span class="tags non-veg">Non-Vegetarian</span>
+                    <span class="tags allergen">Contains Prawns</span>
+                    <p>Simple and tasty grilled prawns sauted with honey chilli sauce.</p>
+                </div>
+                <!-- Add Recipe Overlay with Ingredients and Recipe Steps -->
+                <div class="add-recipe-overlay">
+                    <h4>Grilled Prawns</h4>
+                    <div class="overlay-content">
+                        <!-- Ingredients Section -->
+                        <div class="section-box">
+                            <h6>INGREDIENTS</h6>
+                            <p>Prawns - 150 grams</p>
+                            <p>Olive Oil - 1 Tsp</p>
+                            <p>Lemon Juice - 1 Tsp</p>
+                            <p>Garlic - 1 clove</p>
+                            <p>Paprika - 1/4 Tsp</p>
+                            <p>Salt - 1/2 Tsp</p>
+                            <p>Black Pepper - 1/4 Tsp</p>
+                            <p>Fresh Parsley - 1 Tsp</p>
+                            <p>Soy Sauce - 1/2 Tsp</p>
+                            <p>Honey - 1/2 Tsp</p>
+
+                        </div>
+                        
+                        <!-- Recipe Steps Section -->
+                        <div class="section-box">
+                            <h6>RECIPE</h6>
+                            <p>1. In a bowl, combine olive oil, lemon juice, minced garlic, paprika, salt, pepper, soy sauce, and honey to make the marinade. </p>
+                            <p>2. Add the prawns to the marinade and toss to coat well.</p>
+                            <p>3. Let the prawns marinate for at least 15 minutes.</p>
+                            <p>4. Preheat your grill to medium-high heat.</p>
+                            <p>5. Thread the prawns onto skewers (if using wooden skewers, soak them in water for 30 minutes beforehand).</p>
+                            <p>6. Place the prawns on the grill.</p>
+                            <p>7. Grill the prawns for about 2-3 minutes on each side, until they turn pink and opaque.</p>
+                            <p>8. Remove the prawns from the grill.</p>
+                            <p>9. Sprinkle with fresh parsley.</p>
+                            <p>10.Serve hot with a lemon wedge on the side.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <!-- Sample Recipe Card (Non-Veg) -->
+            <div class="recipe-card">
+                <img src="https://img.freepik.com/free-photo/croissants-topped-with-chocolate-chips_140725-3584.jpg?ga=GA1.1.1911128232.1729533487&semt=ais_hybrid" alt="Recipe Image">
+                <div class="content">
+                    <h3>Chicken Croissants</h3>
+                    <span class="tags non-veg">Non-Vegetarian</span>
+                    <span class="tags allergen">Contains Dairy, Nuts, Soy, Gluten</span>
+                    <p>An Italian cuisine with a twist of cheesy shredded chicken with some delicious seasoning.</p>
+                </div>
+                <!-- Add Recipe Overlay with Ingredients and Recipe Steps -->
+                <div class="add-recipe-overlay">
+                    <h4>Chicken Croissants</h4>
+                    <div class="overlay-content">
+                        <!-- Ingredients Section -->
+                        <div class="section-box">
+                            <h6>INGREDIENTS</h6>
+                            <p>Croissant Dough: 1 pre-made dough</p>
+                            <p>Cooked Chicken: 100 grams</p>
+                            <p>Mayonnaise: 1 Tsp</p>
+                            <p>Dijon Mustard: 1 Tsp</p>
+                            <p>Salt: 1/4 Tsp</p>
+                            <p>Black Pepper: 1/4 Tsp</p>
+                            <p>Cheddar Cheese: 1 Slice</p>
+                            <p>Egg Wash: 1 Beaten egg</p>
+                            <p>Fresh Lettuce: 1 Leaf</p>
+                            <p>Tomato: 2 Slices</p>
+                        </div>
+                        
+                        <!-- Recipe Steps Section -->
+                        <div class="section-box">
+                            <h6>RECIPE</h6>
+                            <p>1. Preheat the oven according to croissant dough package instructions.</p>
+                            <p>2. Roll out the croissant dough and cut it into a triangle shape.</p>
+                            <p>3. In a bowl, mix shredded chicken with mayonnaise, Dijon mustard, salt, and black pepper.</p>
+                            <p>4. Place a spoonful of the chicken mixture on the wide end of the dough triangle.</p>
+                            <p>5. Add a slice of cheddar cheese on top of the chicken mixture.</p>
+                            <p>6. Roll the dough from the wide end towards the point, tucking in the sides.</p>
+                            <p>7. Brush the croissant with egg wash.</p>
+                            <p>8. Place the rolled croissants on a baking sheet.</p>
+                            <p>9. Bake in the preheated oven until golden brown and flaky.</p>
+                            <p>10.Once cooled slightly, slice open and add fresh lettuce and tomato. </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <!-- Sample Recipe Card (Non-Veg) -->
+            <div class="recipe-card">
+                <img src="https://img.freepik.com/premium-vector/succulent-herbcrusted-chicken-thighs-rustic-delight-rosemary-thyme-golden-perfection_597121-40195.jpg?ga=GA1.1.1911128232.1729533487&semt=ais_hybrid" alt="Recipe Image">
+                <div class="content">
+                    <h3>Potato wedges</h3>
+                    <span class="tags veg">Vegetarian</span>
+                    <span class="tags allergen">Contains Wheat starch, Dairy</span>
+                    <p>Golden roasted potatoes coated with dragon bbq honey sauce.</p>
+                </div>
+                <!-- Add Recipe Overlay with Ingredients and Recipe Steps -->
+                <div class="add-recipe-overlay">
+                    <h4>Potato Wedges</h4>
+                    <div class="overlay-content">
+                        <!-- Ingredients Section -->
+                        <div class="section-box">
+                            <h6>INGREDIENTS</h6>
+                            <p>Potatoes: 1 large, cut into wedges</p>
+                            <p>Olive Oil: 1 Tsp</p>
+                            <p>Salt: 1/2 Tsp</p>
+                            <p>Black Pepper: 1/4 Tsp</p>
+                            <p>Paprika: 1/4 Tsp</p>
+                            <p>Garlic Powder: 1/4 Tsp</p>
+                            <p>Onion Powder: 1/4 Tsp</p>
+                            <p>Dried Rosemary: 1/4 Tsp</p>
+                            <p>Parmesan Cheese: 1 Tsp grated</p>
+                            <p>Parsley: 1 Tsp</p>
+                        </div>
+                        
+                        <!-- Recipe Steps Section -->
+                        <div class="section-box">
+                            <h6>RECIPE</h6>
+                            <p>1. Preheat the oven to 200°C (400°F).</p>
+                            <p>2. In a bowl, mix olive oil with salt, pepper, paprika, garlic powder, onion powder, and dried rosemary.</p>
+                            <p>3. Toss potato wedges in the seasoned oil mixture until well coated.</p>
+                            <p>4. Arrange the wedges in a single layer on a baking sheet.</p>
+                            <p>5. Sprinkle grated Parmesan cheese on top if using.</p>
+                            <p>6. Bake for 25-30 minutes, turning once halfway through, until golden and crispy.</p>
+                            <p>7. Remove from the oven and let them cool slightly.</p>
+                            <p>8. Garnish with chopped parsley.</p>
+                            <p>9. Serve hot with your favorite dipping sauce.</p>
+                            <p>10.Enjoy your delicious and crispy potato wedges! </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+        </div>
+
+    </div>
+
+    <!-- FAQ Modal Script -->
+    <script>
+        function openFAQ() {
+            alert("FAQ Bot - Coming soon!");
+        }
+    </script>
+
+</body>
+</html>
